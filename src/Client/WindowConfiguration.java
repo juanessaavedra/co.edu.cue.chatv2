@@ -1,3 +1,4 @@
+package Client;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,9 +14,9 @@ import java.util.logging.Logger;
  * @author Ivan Salas Corrales <http://programandoointentandolo.com/>
  */
 
-public class VentanaConfiguracion extends JDialog{ // Esta clase representa una ventana de la interfaz de usuario de Swing
+public class WindowConfiguration extends JDialog{ // Esta clase representa una ventana de la interfaz de usuario de Swing
 
-    private Logger log = Logger.getLogger(String.valueOf(VentanaConfiguracion.class)); //Registrar mensajes de registro
+    private Logger log = Logger.getLogger(String.valueOf(WindowConfiguration.class)); //Registrar mensajes de registro
     private JTextField tfUsuario;
     private JTextField tfHost;
     private JTextField tfPuerto;
@@ -25,11 +26,11 @@ public class VentanaConfiguracion extends JDialog{ // Esta clase representa una 
     /**
      * Constructor de la ventana de configuracion inicial
      *
-     * @param padre Ventana padre
+     * @param father Ventana father
      */
 
-    public VentanaConfiguracion(JFrame padre) {
-        super(padre, "Configuracion inicial", true); //Llama al contstructor de JDialog, para inicializar la ventana de dialogo.
+    public WindowConfiguration(JFrame father) {
+        super(father, "Configuracion inicial", true); //Llama al contstructor de JDialog, para inicializar la ventana de dialogo.
         //1 parametro: Indicar que esta ventana de dialogo es modal, 2 parametro: Titulo de la ventana
 
         JLabel lbUsuario = new JLabel("Usuario:");  //Se crean etiquetas JLbal para describir los campos de entrada y de texto

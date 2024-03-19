@@ -1,13 +1,16 @@
+package Chat;
+
 import java.util.Observable;
 
-public class MensajesChat extends Observable { //Solo tiene un get y un set
+/** // Esta clase es muy sencilla porque únicamente tiene un set y get aunque puesto que hereda de Observable
+ *  hay que saber de que va el patrón Observer.**/
 
+public class ChatMessages extends Observable { //Solo tiene un get y un set
 
-    // Esta clase es muy sencilla porque únicamente tiene un set y get aunque puesto que hereda de Observable hay que saber de que va el patrón Observer.
 
     private String mensaje;
 
-    public MensajesChat(){
+    public ChatMessages(){
     }
 
     public String getMensaje(){

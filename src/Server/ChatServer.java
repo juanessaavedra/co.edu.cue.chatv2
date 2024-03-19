@@ -1,3 +1,8 @@
+package Server;
+
+import Chat.ChatMessages;
+import Client.ConnectionClient;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -6,13 +11,13 @@ import java.util.logging.Logger;
 /**
  * Servidor para el chat.
  *
- * En el patrón observer hay 2 tipos de elementos los observadores y los observados (MensajesChat es un observado). Si un objeto quiere observar a otro se apunta a su lista de observadores para avisarle
+ * En el patrón observer hay 2 tipos de elementos los observadores y los observados (Chat.MensajesChat es un observado). Si un objeto quiere observar a otro se apunta a su lista de observadores para avisarle
  * de que quiere saber cuando cambia su estado para realizar alguna acción, por ejemplo mostrar el cambio, y el objeto observado lo que hace es informar a todos los objetos que lo están observando para decirles que su estado ha cambiado.
 
  *
  */
 
-public class ServidorChat {
+public class ChatServer {
 
     /**
      * @param args the command line arguments
@@ -22,17 +27,17 @@ public class ServidorChat {
 
         // Carga el archivo de configuracion de log4J
        // PropertyConfigurator.configure("log4j.properties");
-        Logger log = Logger.getLogger(String.valueOf(ServidorChat.class));
+        Logger log = Logger.getLogger(String.valueOf(ChatServer.class));
 
-        int puerto = 5050;
-        int maximoConexiones = 10; // Maximo de conexiones simultaneas
+        int port = 5050;
+        int maxConnections = 10; // Maximo de conexiones simultaneas
         ServerSocket servidor = null;
         Socket socket = null;
-        MensajesChat mensajes = new MensajesChat(); //se crea un objeto (de la clase MensajesChat) que será el que se utilizará para permitir que se puedan intercambiar mensajes entre múltiples clientes que es la idea de un chat.
+        ChatMessages mensajes = new ChatMessages(); //se crea un objeto (de la clase Chat.MensajesChat) que será el que se utilizará para permitir que se puedan intercambiar mensajes entre múltiples clientes que es la idea de un chat.
 
         try {
             // Se crea el serverSocket
-            servidor = new ServerSocket(puerto, maximoConexiones);
+            servidor = new ServerSocket(port, maxConnections);
 
             // Bucle infinito para esperar conexiones
             while (true) {
@@ -40,7 +45,7 @@ public class ServidorChat {
                 socket = servidor.accept(); //Metodo del servidor el cual espera y acepta la conexion del cliente
                 log.info("Cliente con la IP " + socket.getInetAddress().getHostName() + " conectado.");
 
-                ConexionCliente cc = new ConexionCliente(socket, mensajes);
+                ConnectionClient cc = new ConnectionClient(socket, mensajes);
                 cc.start();
 
             }

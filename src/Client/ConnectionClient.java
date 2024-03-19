@@ -1,3 +1,7 @@
+package Client;
+
+import Chat.ChatMessages;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,22 +16,22 @@ import java.util.logging.Logger;
  * @author Ivan Salas Corrales <http://programandoointentandolo.com>
  */
 
-public class ConexionCliente extends Thread implements Observer { //Hereda Thread e implementa la interfaz Observer
+public class ConnectionClient extends Thread implements Observer { //Hereda Thread e implementa la interfaz Observer
 
-    private Logger log = Logger.getLogger(String.valueOf(ConexionCliente.class)); //Clase usada para el logging
-    //Invoca el .getLogger que es un metodo estatico de Logger en donde se obtiene la istancia del logger basada en la clase ConexionCliente. String.valueOf convierte el nombre de la clase en una cadena
+    private Logger log = Logger.getLogger(String.valueOf(ConnectionClient.class)); //Clase usada para el logging
+    //Invoca el .getLogger que es un metodo estatico de Logger en donde se obtiene la istancia del logger basada en la clase Client.ConexionCliente. String.valueOf convierte el nombre de la clase en una cadena
     private Socket socket;
-    private MensajesChat mensajes;
-    private DataInputStream entradaDatos;
-    private DataOutputStream salidaDatos;
+    private ChatMessages messages;
+    private DataInputStream dataEntry;
+    private DataOutputStream dataOutput;
 
-    public ConexionCliente (Socket socket, MensajesChat mensajes){ //Constructor
+    public ConnectionClient(Socket socket, ChatMessages mensajes){ //Constructor
         this.socket = socket;
-        this.mensajes = mensajes;
+        this.messages = messages;
 
         try {
-            entradaDatos = new DataInputStream(socket.getInputStream());
-            salidaDatos = new DataOutputStream(socket.getOutputStream());
+            dataEntry = new DataInputStream(socket.getInputStream());
+            dataOutput = new DataOutputStream(socket.getOutputStream());
         } catch (IOException ex) {
           //  log.error("Error al crear los stream de entrada y salida : " + ex.getMessage());
         }
@@ -38,22 +42,22 @@ public class ConexionCliente extends Thread implements Observer { //Hereda Threa
         String mensajeRecibido;
         boolean conectado = true;
         // Se apunta a la lista de observadores de mensajes
-        mensajes.addObserver(this);
+        messages.addObserver(this);
 
         while (conectado) {
             try {
                 // Lee un mensaje enviado por el cliente
-                mensajeRecibido = entradaDatos.readUTF();
+                mensajeRecibido = dataEntry.readUTF();
                 // Pone el mensaje recibido en mensajes para que se notifique 
                 // a sus observadores que hay un nuevo mensaje.
-                mensajes.setMensaje(mensajeRecibido);
+                messages.setMensaje(mensajeRecibido);
             } catch (IOException ex) {
                 log.info("Cliente con la IP " + socket.getInetAddress().getHostName() + " desconectado.");
                 conectado = false;
                 // Si se ha producido un error al recibir datos del cliente se cierra la conexion con el.
                 try {
-                    entradaDatos.close();
-                    salidaDatos.close();
+                    dataEntry.close();
+                    dataOutput.close();
                 } catch (IOException ex2) {
                   //  log.error("Error al cerrar los stream de entrada y salida :" + ex2.getMessage());
                 }
@@ -65,7 +69,7 @@ public class ConexionCliente extends Thread implements Observer { //Hereda Threa
     public void update(Observable o, Object arg) {
         try {
             // Envia el mensaje al cliente
-            salidaDatos.writeUTF(arg.toString());
+            dataOutput.writeUTF(arg.toString());
         } catch (IOException ex) {
            // log.error("Error al enviar mensaje al cliente (" + ex.getMessage() + ").");
         }
@@ -73,7 +77,7 @@ public class ConexionCliente extends Thread implements Observer { //Hereda Threa
 }
 
 /**
- *  finalmente la clase ConexionCliente que solo tiene dos métodos, el método run que hereda de Thread y que es el que se encarga de recibir
+ *  finalmente la clase Client.ConexionCliente que solo tiene dos métodos, el método run que hereda de Thread y que es el que se encarga de recibir
  *  los mensajes del cliente y el método update que es necesario implementar por implementar la interfaz Observer y que es el encargado de enviar
  *  el mensaje al cliente.
  *
